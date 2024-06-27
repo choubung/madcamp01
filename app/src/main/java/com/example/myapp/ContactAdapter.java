@@ -14,10 +14,11 @@ import java.util.ArrayList;
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
     // contactAdapter 안에 뷰홀더라고 하는 것을 정의
     Context context;
-    ArrayList<ContactItem> items = new ArrayList<ContactItem>();
+    ArrayList<ContactItem> contactItems;
 
-    public ContactAdapter(Context context){
+    public ContactAdapter(Context context, ArrayList<ContactItem> contactItems){
         this.context = context;
+        this.contactItems = contactItems;
     }
 
     @NonNull
@@ -32,25 +33,15 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // 뷰홀더가 바인딩 될 시점
-        ContactItem item = items.get(position);
-        holder.setItem(item);
+        holder.name.setText(contactItems.get(position).getName());
+        holder.department.setText(contactItems.get(position).getDepartment());
+        holder.phoneNumber.setText(contactItems.get(position).getPhoneNumber());
+        holder.email.setText(contactItems.get(position).getEmail());
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
-    }
-
-    public void addItem(ContactItem item){
-        items.add(item);
-    }
-
-    //public void addItems(ArrayList<ContactItem> items){
-    //    this.items = items;
-    //}
-
-    public ContactItem getItem(int position){
-        return items.get(position);
+        return contactItems.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder{
@@ -60,17 +51,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            name = (TextView) itemView.findViewById(R.id.name);
-            department = (TextView) itemView.findViewById(R.id.department);
-            phoneNumber = (TextView) itemView.findViewById(R.id.phoneNumber);
-            email = (TextView) itemView.findViewById(R.id.email);
-        }
-
-        public void setItem(ContactItem item){
-            name.setText(item.getName());
-            department.setText(item.getDepartment());
-            phoneNumber.setText(item.getPhoneNumber());
-            email.setText(item.getEmail());
+            name = itemView.findViewById(R.id.name);
+            department = itemView.findViewById(R.id.department);
+            phoneNumber = itemView.findViewById(R.id.phoneNumber);
+            email = itemView.findViewById(R.id.email);
         }
     }
 }

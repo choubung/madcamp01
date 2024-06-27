@@ -11,35 +11,79 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class Fragment1 extends Fragment {
     RecyclerView recyclerView;
+    LinearLayoutManager layoutManager;
+    ContactAdapter adapter;
+
+    ContactItem item;
+    ArrayList<ContactItem> contactItems = new ArrayList<>();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_1, container, false);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        recyclerView = rootView.findViewById(R.id.recyclerView);
+        parser();
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        layoutManager = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        ContactAdapter adapter = new ContactAdapter(getActivity().getApplicationContext());
-
-        // test
-        adapter.addItem(new ContactItem("김주균", "소프트웨어학부", "02)710-9430", "jgkim@sm.ac.kr"));
-        adapter.addItem(new ContactItem("김주균", "소프트웨어학부", "02)710-9430", "jgkim@sm.ac.kr"));
-        adapter.addItem(new ContactItem("김주균", "소프트웨어학부", "02)710-9430", "jgkim@sm.ac.kr"));
-        adapter.addItem(new ContactItem("창병모", "소프트웨어학부", "02)710-9430", "jgkim@sm.ac.kr"));
-        adapter.addItem(new ContactItem("김주균", "소프트웨어학부", "02)710-9430", "jgkim@sm.ac.kr"));
-        adapter.addItem(new ContactItem("최영우", "소프트웨어학부", "02)710-9430", "jgkim@sm.ac.kr"));
-        adapter.addItem(new ContactItem("김주균", "소프트웨어학부", "02)710-9430", "jgkim@sm.ac.kr"));
-        adapter.addItem(new ContactItem("유석종", "소프트웨어학부", "02)710-9430", "jgkim@sm.ac.kr"));
-        adapter.addItem(new ContactItem("김주균", "소프트웨어학부", "02)710-9430", "jgkim@sm.ac.kr"));
-
+        adapter = new ContactAdapter(getActivity().getApplicationContext(), contactItems);
         recyclerView.setAdapter(adapter);
+
         return rootView;
+    }
+
+    private void parser() {
+        InputStream inputStream = getResources().openRawResource(R.raw.contactlist);
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+        StringBuffer stringBuffer = new StringBuffer();
+        String line;
+
+        try {
+            while ((line = bufferedReader.readLine()) != null){
+                stringBuffer.append(line);
+            }
+
+            JSONObject jsonObject = new JSONObject(stringBuffer.toString());
+            JSONArray jsonArray = new JSONArray(jsonObject.getString("contact_list"));
+
+            for(int i = 0; i < jsonArray.length(); i++){
+
+                JSONObject jsonObject1 = (JSONObject) jsonArray.get(i);
+
+                String name = jsonObject1.getString("name");
+                String department = jsonObject1.getString("department");
+                String phoneNumber = jsonObject1.getString("phoneNumber");
+                String email = jsonObject1.getString("email");
+
+                item = new ContactItem(name, department, phoneNumber, email);
+                contactItems.add(item);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            try {
+                inputStream.close();
+                inputStreamReader.close();
+                bufferedReader.close();
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 }
