@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/group"
+        android:icon="@drawable/icon_contact"
+        android:title="연락처"
+        android:enabled="true"/>
+
+    <item
+        android:id="@+id/picture"
+        android:icon="@drawable/icon_photo"
+        android:title="사진"
+        android:enabled="true"/>
+
+    <item
+        android:id="@+id/free"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:title="자유"
+        android:enabled="true"/>
+</menu>
