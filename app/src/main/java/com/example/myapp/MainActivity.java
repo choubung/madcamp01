@@ -11,11 +11,11 @@ import android.util.Log;
 public class MainActivity extends AppCompatActivity {
 
     // 바텀 네비게이션
-    BottomNavigationView bottomNavigationView;
+    BottomNavigationView bottomNavigationView; // 하단 탭 뷰
     // 프래그먼트 변수
-    Fragment1 fragment1;
-    Fragment2 fragment2;
-    Fragment3 fragment3;
+    Fragment1 fragment1; // 연락처탭
+    Fragment2 fragment2; // 사진탭
+    Fragment3 fragment3; //
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.group) {
+                if (item.getItemId() == R.id.group) { // switch로 했더니 오류 발생하여 if문으로 변경
                     getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, fragment1).commitAllowingStateLoss();
                     return true;
                 } else if (item.getItemId() == R.id.picture) {
