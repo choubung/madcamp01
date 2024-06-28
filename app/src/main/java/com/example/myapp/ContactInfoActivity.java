@@ -1,6 +1,7 @@
 package com.example.myapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 public class ContactInfoActivity extends AppCompatActivity {
     TextView name, department, phoneNumber, email;
     Button callBtn, messageBtn, emailBtn;
+    ContactItem item;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,9 @@ public class ContactInfoActivity extends AppCompatActivity {
         department = findViewById(R.id.department);
         phoneNumber = findViewById(R.id.phoneNumber);
         email = findViewById(R.id.email);
+
+        Intent passedIntent = getIntent();
+        processIntent(passedIntent);
 
         callBtn = (Button) findViewById(R.id.callBtn);
         callBtn.setOnClickListener(new View.OnClickListener() {
@@ -49,6 +54,14 @@ public class ContactInfoActivity extends AppCompatActivity {
         emailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {
+                    Intent mail_intent = new Intent(Intent.ACTION_SENDTO);
+                    mail_intent.setData(Uri.parse("mailto:"));
+                    mail_intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"test@sm.ac.kr"});
+                    startActivity(mail_intent);
+                } catch (android.content.ActivityNotFoundException exception) {
+                    Toast.makeText(ContactInfoActivity.this, "이메일 앱을 찾을 수 없음", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -60,14 +73,11 @@ public class ContactInfoActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        Intent passedIntent = getIntent();
-        processIntent(passedIntent);
     }
 
     private void processIntent(Intent passedIntent) {
         if (passedIntent != null){
-            ContactItem item = (ContactItem) passedIntent.getSerializableExtra("contact");
+            item = (ContactItem) passedIntent.getSerializableExtra("contact");
             if (item != null) {
                 //Toast.makeText(this, "아이템을 무사히 전달받음: 이름" + item.getName(), Toast.LENGTH_SHORT).show();
                 name.setText(item.getName() + " 교수님");
