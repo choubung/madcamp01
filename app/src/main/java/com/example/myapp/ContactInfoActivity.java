@@ -20,6 +20,7 @@ public class ContactInfoActivity extends AppCompatActivity {
     TextView name, department, phoneNumber, email;
     Button callBtn, messageBtn, emailBtn;
     ContactItem item;
+    String address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class ContactInfoActivity extends AppCompatActivity {
                 try {
                     Intent mail_intent = new Intent(Intent.ACTION_SENDTO);
                     mail_intent.setData(Uri.parse("mailto:"));
-                    mail_intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"test@sm.ac.kr"});
+                    mail_intent.putExtra(Intent.EXTRA_EMAIL, new String[]{address});
                     startActivity(mail_intent);
                 } catch (android.content.ActivityNotFoundException exception) {
                     Toast.makeText(ContactInfoActivity.this, "이메일 앱을 찾을 수 없음", Toast.LENGTH_SHORT).show();
@@ -84,6 +85,7 @@ public class ContactInfoActivity extends AppCompatActivity {
                 department.setText(item.getDepartment());
                 phoneNumber.setText(item.getPhoneNumber());
                 email.setText(item.getEmail());
+                address = item.getEmail();
             }
         }
     }
