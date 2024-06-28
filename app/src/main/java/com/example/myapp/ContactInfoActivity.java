@@ -20,7 +20,7 @@ public class ContactInfoActivity extends AppCompatActivity {
     TextView name, department, phoneNumber, email;
     Button callBtn, messageBtn, emailBtn;
     ContactItem item;
-    String address;
+    String address, numberStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class ContactInfoActivity extends AppCompatActivity {
         callBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent("android.intent.action.DIAL", Uri.parse("tel:"+numberStr)));
             }
         });
 
@@ -81,11 +81,13 @@ public class ContactInfoActivity extends AppCompatActivity {
             item = (ContactItem) passedIntent.getSerializableExtra("contact");
             if (item != null) {
                 //Toast.makeText(this, "아이템을 무사히 전달받음: 이름" + item.getName(), Toast.LENGTH_SHORT).show();
+                numberStr = item.getPhoneNumber();
+                address = item.getEmail();
+
                 name.setText(item.getName() + " 교수님");
                 department.setText(item.getDepartment());
-                phoneNumber.setText(item.getPhoneNumber());
-                email.setText(item.getEmail());
-                address = item.getEmail();
+                phoneNumber.setText(numberStr);
+                email.setText(address);
             }
         }
     }
