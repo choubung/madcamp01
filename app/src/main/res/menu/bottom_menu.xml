@@ -8,13 +8,13 @@
 
     <item
         android:id="@+id/picture"
-        android:icon="@drawable/icon_photo"
-        android:title="사진"
+        android:icon="@drawable/icon_image_file"
+        android:title="갤러리"
         android:enabled="true"/>
 
     <item
         android:id="@+id/free"
-        android:icon="@drawable/ic_launcher_foreground"
-        android:title="자유"
+        android:icon="@drawable/icon_bookmarks"
+        android:title="메모"
         android:enabled="true"/>
 </menu>
