@@ -1,5 +1,6 @@
 package com.example.myapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -48,7 +49,10 @@ public class Fragment1 extends Fragment {
             public void onItemClick(ContactAdapter.ViewHolder holder, View view, int position) {
                 ContactItem item = adapter.getItem(position);
 
-                Toast.makeText(getActivity().getApplicationContext(), "아이템 선택됨" + item.getName(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "아이템 선택됨" + item.getName(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), ContactInfoActivity.class);
+                intent.putExtra("contact", item);
+                startActivity(intent);
             }
         });
 

@@ -2,7 +2,9 @@ package com.example.myapp;
 
 import android.widget.ImageView;
 
-public class ContactItem {
+import java.io.Serializable;
+
+public class ContactItem implements Serializable { // 다른 개체로 넘기기 위해 Serializable implement
     String name, department, phoneNumber, email;
     ImageView profile = null;
 
