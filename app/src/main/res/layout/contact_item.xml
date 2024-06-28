@@ -15,7 +15,7 @@
         android:layout_width="55dp"
         android:layout_height="90dp"
         android:layout_marginLeft="15dp"
-        android:src="@drawable/picture_profile"/>
+        android:src="@drawable/icon_contact_profile"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -110,6 +110,5 @@
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </LinearLayout>

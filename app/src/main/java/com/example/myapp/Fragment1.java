@@ -1,8 +1,14 @@
 package com.example.myapp;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -13,6 +19,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,9 +34,10 @@ public class Fragment1 extends Fragment {
     RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
     ContactAdapter adapter;
-
-    ContactItem item;
     ArrayList<ContactItem> contactItems = new ArrayList<>();
+    FloatingActionButton fab;
+
+    private ActivityResultLauncher<Intent> addContactLauncher;
 
     @Nullable
     @Override
@@ -53,6 +62,34 @@ public class Fragment1 extends Fragment {
                 Intent intent = new Intent(getActivity(), ContactInfoActivity.class);
                 intent.putExtra("contact", item);
                 startActivity(intent);
+            }
+        });
+
+        addContactLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        String name = result.getData().getStringExtra("name");
+                        String department = result.getData().getStringExtra("department");
+                        String number = result.getData().getStringExtra("number");
+                        String email = result.getData().getStringExtra("email");
+
+                        contactItems.add(new ContactItem(name, department, number, email));
+                        adapter.notifyItemInserted(contactItems.size() - 1);  // 변경된 위치가 마지막 인덱스이므로 -1을 해준다.
+                    }
+                }
+        );
+
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab_btn);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), AddContactActivity.class);
+                addContactLauncher.launch(intent);
+
+                //startActivity(intent);
+                //contactItems.add(new ContactItem("name", "department", "number", "email"));
+                //adapter.notifyItemInserted(contactItems.size());
             }
         });
 
@@ -84,7 +121,7 @@ public class Fragment1 extends Fragment {
                 String phoneNumber = jsonObject1.getString("phoneNumber");
                 String email = jsonObject1.getString("email");
 
-                item = new ContactItem(name, department, phoneNumber, email);
+                ContactItem item = new ContactItem(name, department, phoneNumber, email);
                 contactItems.add(item);
             }
         }catch (Exception e){
