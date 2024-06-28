@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,6 +42,15 @@ public class Fragment1 extends Fragment {
 
         adapter = new ContactAdapter(getActivity().getApplicationContext(), contactItems);
         recyclerView.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(new ContactAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(ContactAdapter.ViewHolder holder, View view, int position) {
+                ContactItem item = adapter.getItem(position);
+
+                Toast.makeText(getActivity().getApplicationContext(), "아이템 선택됨" + item.getName(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return rootView;
     }
