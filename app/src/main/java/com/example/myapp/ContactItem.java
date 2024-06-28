@@ -1,7 +1,10 @@
 package com.example.myapp;
 
+import android.widget.ImageView;
+
 public class ContactItem {
     String name, department, phoneNumber, email;
+    ImageView profile = null;
 
     public ContactItem(String name, String department, String phoneNumber, String email) {
         this.name = name;
@@ -9,6 +12,14 @@ public class ContactItem {
         this.phoneNumber = phoneNumber;
         this.email = email;
     }
+/*
+    public ContactItem(String name, String department, String phoneNumber, String email, ImageView profile) {
+        this.name = name;
+        this.department = department;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.profile = profile;
+    }*/
 
     public String getName() {
         return name;
@@ -40,5 +51,9 @@ public class ContactItem {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setProfile(ImageView profile) {
+        this.profile = profile;
     }
 }

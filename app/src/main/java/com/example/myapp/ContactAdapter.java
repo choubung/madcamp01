@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -47,6 +48,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     static class ViewHolder extends RecyclerView.ViewHolder{
         //뷰홀더는 각각의 아이템을 위한 뷰를 담고 있을 수 있음
         TextView name, department, phoneNumber, email;
+        //ImageView profile;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -55,6 +57,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
             department = itemView.findViewById(R.id.department);
             phoneNumber = itemView.findViewById(R.id.phoneNumber);
             email = itemView.findViewById(R.id.email);
+            //profile = itemView.findViewById(R.id.profile);
         }
     }
 }
