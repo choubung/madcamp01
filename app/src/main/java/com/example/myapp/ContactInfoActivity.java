@@ -47,7 +47,7 @@ public class ContactInfoActivity extends AppCompatActivity {
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("smsto:"+numberStr)));
             }
         });
 

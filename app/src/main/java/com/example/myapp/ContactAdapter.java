@@ -46,7 +46,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         // 뷰홀더가 바인딩 될 시점
         ContactItem item = contactItems.get(position);
 
-        holder.name.setText(item.getName());
+        holder.name.setText(item.getName() + " 교수님");
         holder.department.setText(item.getDepartment());
         holder.phoneNumber.setText(item.getPhoneNumber());
         holder.email.setText(item.getEmail());
