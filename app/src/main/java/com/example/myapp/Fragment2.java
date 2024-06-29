@@ -1,7 +1,6 @@
 package com.example.myapp;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,7 +10,7 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,6 +18,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -36,24 +37,29 @@ public class Fragment2 extends Fragment {
     private static final int REQUEST_CAMERA_PERMISSION = 100;
     private static final int REQUEST_STORAGE_PERMISSION = 200;
 
-    private List<ImageView> imageViews = new ArrayList<>();
-    private int currentImageViewIndex = 11;
+    private RecyclerView recyclerView;
+    private ImageAdapter imageAdapter;
+    private List<Bitmap> imageList = new ArrayList<>();
+    private Button btnSelect, btnDelete;
 
-    @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_2, container, false);
 
-        // ImageView들을 리스트에 추가
-        imageViews.add((ImageView) rootView.findViewById(R.id.imageView1));
-
-
-
-        // 필요한 만큼 추가적인 ImageView들을 리스트에 추가
+        recyclerView = rootView.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        imageAdapter = new ImageAdapter(imageList);
+        recyclerView.setAdapter(imageAdapter);
 
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
         fab.setOnClickListener(v -> showImageSourceDialog());
+
+        btnSelect = rootView.findViewById(R.id.btnSelect);
+        btnDelete = rootView.findViewById(R.id.btnDelete);
+
+        btnSelect.setOnClickListener(v -> selectImage());
+        btnDelete.setOnClickListener(v -> deleteImage());
 
         return rootView;
     }
@@ -115,26 +121,26 @@ public class Fragment2 extends Fragment {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_IMAGE_CAPTURE && data != null && data.getExtras() != null) {
                 Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
-                if (currentImageViewIndex < imageViews.size()) {
-                    imageViews.get(currentImageViewIndex).setImageBitmap(imageBitmap);
-                    currentImageViewIndex++;
-                } else {
-                    Toast.makeText(requireContext(), "최대 이미지 개수 초과", Toast.LENGTH_SHORT).show();
-                }
+                imageList.add(imageBitmap);
+                imageAdapter.notifyDataSetChanged();
             } else if (requestCode == REQUEST_IMAGE_PICK && data != null && data.getData() != null) {
                 Uri imageUri = data.getData();
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), imageUri);
-                    if (currentImageViewIndex < imageViews.size()) {
-                        imageViews.get(currentImageViewIndex).setImageBitmap(bitmap);
-                        currentImageViewIndex++;
-                    } else {
-                        Toast.makeText(requireContext(), "최대 이미지 개수 초과", Toast.LENGTH_SHORT).show();
-                    }
+                    imageList.add(bitmap);
+                    imageAdapter.notifyDataSetChanged();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
+    }
+
+    private void selectImage() {
+        // 이미지 선택 로직 구현
+    }
+
+    private void deleteImage() {
+        // 이미지 삭제 로직 구현
     }
 }
