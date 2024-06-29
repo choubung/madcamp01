@@ -14,7 +14,7 @@
 
     <item
         android:id="@+id/free"
-        android:icon="@drawable/icon_bookmarks"
-        android:title="메모"
+        android:icon="@drawable/icon_mail_form"
+        android:title="메일 양식"
         android:enabled="true"/>
 </menu>
