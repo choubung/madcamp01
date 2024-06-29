@@ -79,29 +79,16 @@ public class Fragment2 extends Fragment {
     }
 
     private void pickImageFromGallery() {
-        // 로그를 추가하여 흐름 확인
-        final String TAG = "pickImageFromGallery";
-        Log.d(TAG, "pickImageFromGallery 실행됨 -> 권한 확인 및 요청까지는 넘어옴");
-
-        // 안드로이드 13 이상인지 확인
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Log.d(TAG, "안드로이드 13 이상인 경우");
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "권한이 이미 부여됨, 갤러리를 엽니다.");
                 openGallery();
             } else {
-                Log.d(TAG, "권한이 없으므로 요청합니다.");
-                // 권한 요청을 Fragment의 메서드를 통해 처리
                 requestPermissions(new String[]{Manifest.permission.READ_MEDIA_IMAGES}, REQUEST_STORAGE_PERMISSION);
             }
         } else {
-            Log.d(TAG, "안드로이드 13 미만인 경우");
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "권한이 이미 부여됨, 갤러리를 엽니다.");
                 openGallery();
             } else {
-                Log.d(TAG, "권한이 없으므로 요청합니다.");
-                // 권한 요청을 Fragment의 메서드를 통해 처리
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_STORAGE_PERMISSION);
             }
         }
@@ -126,44 +113,47 @@ public class Fragment2 extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        final String TAG = "onRequestPermissionsResult";
-
-        // 카메라 권한 요청에 대한 처리
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 captureImageFromCamera();
             } else {
                 Toast.makeText(requireContext(), "카메라 권한이 필요합니다.", Toast.LENGTH_SHORT).show();
             }
-        }
-        // 저장소 권한 요청에 대한 처리
-        else if (requestCode == REQUEST_STORAGE_PERMISSION) {
+        } else if (requestCode == REQUEST_STORAGE_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "권한이 부여됨, 갤러리를 엽니다.");
                 openGallery();
             } else {
-                Log.d(TAG, "권한이 필요함을 알리는 토스트 메시지");
                 Toast.makeText(requireContext(), "저장소 접근 권한이 필요합니다.", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private Bitmap cropToSquare(Bitmap bitmap) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int newSize = Math.min(width, height);
+        int xOffset = (width - newSize) / 2;
+        int yOffset = (height - newSize) / 2;
+        return Bitmap.createBitmap(bitmap, xOffset, yOffset, newSize, newSize);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            // 카메라 촬영 후 이미지 처리
             if (requestCode == REQUEST_IMAGE_CAPTURE && data != null && data.getExtras() != null) {
                 Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+                Bitmap croppedBitmap = cropToSquare(imageBitmap);
                 imageList.add(imageBitmap);
+                imageList.add(croppedBitmap);
                 imageAdapter.notifyDataSetChanged();
-            }
-            // 갤러리에서 이미지 선택 후 처리
-            else if (requestCode == REQUEST_IMAGE_PICK && data != null && data.getData() != null) {
+            } else if (requestCode == REQUEST_IMAGE_PICK && data != null && data.getData() != null) {
                 Uri imageUri = data.getData();
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), imageUri);
-                    imageList.add(bitmap);
+                    Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, true); // 크기 조정
+                    Bitmap croppedBitmap = cropToSquare(resizedBitmap);
+                    imageList.add(croppedBitmap); // 크롭된 이미지만 추가
                     imageAdapter.notifyDataSetChanged();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -174,11 +164,9 @@ public class Fragment2 extends Fragment {
 
     private void selectImage() {
         // 이미지 선택 로직 구현
-        // 예: 선택된 이미지를 처리하는 코드 추가
     }
 
     private void deleteImage() {
         // 이미지 삭제 로직 구현
-        // 예: 선택된 이미지를 리스트에서 제거하는 코드 추가
     }
 }
