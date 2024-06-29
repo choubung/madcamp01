@@ -36,48 +36,6 @@
             "department":"소프트웨어학부",
             "phoneNumber":"02)710-0006",
             "email":"it06@sm.ac.kr"
-        },
-        {
-            "name":"윤*익",
-            "department":"인공지능공학부",
-            "phoneNumber":"02)710-0011",
-            "email":"it01@sm.ac.kr"
-        },
-        {
-            "name":"이*우",
-            "department":"인공지능공학부",
-            "phoneNumber":"02)710-0012",
-            "email":"it02@sm.ac.kr"
-        },
-        {
-            "name":"김*연",
-            "department":"인공지능공학부",
-            "phoneNumber":"02)710-0013",
-            "email":"it03@sm.ac.kr"
-        },
-        {
-            "name":"김*연",
-            "department":"인공지능공학부",
-            "phoneNumber":"02)710-0013",
-            "email":"it03@sm.ac.kr"
-        },
-        {
-            "name":"박*진",
-            "department":"인공지능공학부",
-            "phoneNumber":"02)710-0014",
-            "email":"it04@sm.ac.kr"
-        },
-        {
-            "name":"김*규",
-            "department":"인공지능공학부",
-            "phoneNumber":"02)710-0015",
-            "email":"it05@sm.ac.kr"
-        },
-        {
-            "name":"강*우",
-            "department":"인공지능공학부",
-            "phoneNumber":"02)710-0016",
-            "email":"it06@sm.ac.kr"
         }
     ]
 }

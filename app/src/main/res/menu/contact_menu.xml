@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/modify"
+        android:icon="@drawable/icon_contact"
+        android:title="수정"
+        android:enabled="true"/>
+
+    <item
+        android:id="@+id/delete"
+        android:icon="@drawable/icon_image_file"
+        android:title="삭제"
+        android:enabled="true"/>
+</menu>

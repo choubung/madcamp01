@@ -36,6 +36,7 @@ public class Fragment1 extends Fragment {
     ContactAdapter adapter;
     ArrayList<ContactItem> contactItems = new ArrayList<>();
     FloatingActionButton fab;
+    Boolean paserFlag = true;
 
     private ActivityResultLauncher<Intent> addContactLauncher;
 
@@ -45,7 +46,7 @@ public class Fragment1 extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_1, container, false);
 
         recyclerView = rootView.findViewById(R.id.recyclerView);
-        parser();
+        if (paserFlag){ parser(); }
 
         layoutManager = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
@@ -104,6 +105,7 @@ public class Fragment1 extends Fragment {
         StringBuffer stringBuffer = new StringBuffer();
         String line;
 
+        if (paserFlag){
         try {
             while ((line = bufferedReader.readLine()) != null){
                 stringBuffer.append(line);
@@ -127,6 +129,8 @@ public class Fragment1 extends Fragment {
         }catch (Exception e){
             e.printStackTrace();
         }finally {
+            paserFlag = false;
+
             try {
                 inputStream.close();
                 inputStreamReader.close();
@@ -135,6 +139,6 @@ public class Fragment1 extends Fragment {
             }catch (Exception e){
                 e.printStackTrace();
             }
-        }
+        }}
     }
 }
