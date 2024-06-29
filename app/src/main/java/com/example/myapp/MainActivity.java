@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         fragment2 = new Fragment2();
         fragment3 = new Fragment3();
 
+        //정신힘들음
 
         // 바텀 네비게이션
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
