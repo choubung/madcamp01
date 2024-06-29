@@ -21,14 +21,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:gravity="center_vertical"
+                android:gravity="bottom"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="당신은 지금"
-                    android:textSize="30dp" />
+                    android:text="당신은"
+                    android:textSize="20dp" />
 
                 <Spinner
                     android:id="@+id/spinner"
@@ -59,8 +59,7 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:inputType="textMultiLine"
-                    android:lines="1"
-                    android:maxLines="2"
+                    android:lines="2"
                     android:gravity="top"
                     android:padding="8dp"
                     android:textSize="15sp"
@@ -144,12 +143,6 @@
                         android:text="끝인사"
                         android:textSize="15sp"
                         android:layout_marginRight="15dp"/>
-
-                    <Spinner
-                        android:id="@+id/spinner2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
 
 
                 </LinearLayout>
