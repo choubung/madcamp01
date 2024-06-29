@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -144,16 +144,14 @@ public class Fragment2 extends Fragment {
             if (requestCode == REQUEST_IMAGE_CAPTURE && data != null && data.getExtras() != null) {
                 Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
                 Bitmap croppedBitmap = cropToSquare(imageBitmap);
-                imageList.add(imageBitmap);
                 imageList.add(croppedBitmap);
                 imageAdapter.notifyDataSetChanged();
             } else if (requestCode == REQUEST_IMAGE_PICK && data != null && data.getData() != null) {
                 Uri imageUri = data.getData();
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), imageUri);
-                    Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, true); // 크기 조정
-                    Bitmap croppedBitmap = cropToSquare(resizedBitmap);
-                    imageList.add(croppedBitmap); // 크롭된 이미지만 추가
+                    Bitmap croppedBitmap = cropToSquare(bitmap);
+                    imageList.add(croppedBitmap);
                     imageAdapter.notifyDataSetChanged();
                 } catch (IOException e) {
                     e.printStackTrace();
