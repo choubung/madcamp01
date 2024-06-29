@@ -36,6 +36,7 @@ public class Fragment1 extends Fragment {
     ContactAdapter adapter;
     ArrayList<ContactItem> contactItems = new ArrayList<>();
     FloatingActionButton fab;
+    Boolean parserFlag = true;
 
     private ActivityResultLauncher<Intent> addContactLauncher;
 
@@ -104,6 +105,7 @@ public class Fragment1 extends Fragment {
         StringBuffer stringBuffer = new StringBuffer();
         String line;
 
+        if(parserFlag){
         try {
             while ((line = bufferedReader.readLine()) != null){
                 stringBuffer.append(line);
@@ -127,6 +129,8 @@ public class Fragment1 extends Fragment {
         }catch (Exception e){
             e.printStackTrace();
         }finally {
+            parserFlag = false;
+
             try {
                 inputStream.close();
                 inputStreamReader.close();
@@ -135,6 +139,6 @@ public class Fragment1 extends Fragment {
             }catch (Exception e){
                 e.printStackTrace();
             }
-        }
+        }}
     }
 }
