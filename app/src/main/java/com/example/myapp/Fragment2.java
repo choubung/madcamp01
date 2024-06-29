@@ -1,13 +1,18 @@
 package com.example.myapp;
 
 import android.Manifest;
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,16 +20,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -35,21 +36,27 @@ public class Fragment2 extends Fragment {
     private static final int REQUEST_CAMERA_PERMISSION = 100;
     private static final int REQUEST_STORAGE_PERMISSION = 200;
 
-    private ImageView imageView;
+    private List<ImageView> imageViews = new ArrayList<>();
+    private int currentImageViewIndex = 11;
 
+    @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_2, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_2, container, false);
 
-        imageView = rootView.findViewById(R.id.imageView);
+        // ImageView들을 리스트에 추가
+        imageViews.add((ImageView) rootView.findViewById(R.id.imageView1));
+
+
+
+        // 필요한 만큼 추가적인 ImageView들을 리스트에 추가
+
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
         fab.setOnClickListener(v -> showImageSourceDialog());
 
         return rootView;
     }
-
-
 
     private void showImageSourceDialog() {
         new MaterialAlertDialogBuilder(requireContext())
@@ -108,12 +115,22 @@ public class Fragment2 extends Fragment {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_IMAGE_CAPTURE && data != null && data.getExtras() != null) {
                 Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
-                imageView.setImageBitmap(imageBitmap);
+                if (currentImageViewIndex < imageViews.size()) {
+                    imageViews.get(currentImageViewIndex).setImageBitmap(imageBitmap);
+                    currentImageViewIndex++;
+                } else {
+                    Toast.makeText(requireContext(), "최대 이미지 개수 초과", Toast.LENGTH_SHORT).show();
+                }
             } else if (requestCode == REQUEST_IMAGE_PICK && data != null && data.getData() != null) {
                 Uri imageUri = data.getData();
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), imageUri);
-                    imageView.setImageBitmap(bitmap);
+                    if (currentImageViewIndex < imageViews.size()) {
+                        imageViews.get(currentImageViewIndex).setImageBitmap(bitmap);
+                        currentImageViewIndex++;
+                    } else {
+                        Toast.makeText(requireContext(), "최대 이미지 개수 초과", Toast.LENGTH_SHORT).show();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
