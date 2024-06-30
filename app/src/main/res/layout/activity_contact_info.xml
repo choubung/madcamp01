@@ -13,7 +13,7 @@
         android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/icon_backspace"
+        android:background="@drawable/button_custom_background"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -83,21 +83,21 @@
                 android:id="@+id/callBtn"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/icon_call"/>
+                android:layout_marginRight="40dp"
+                android:background="@drawable/button_custom_call"/>
 
             <Button
                 android:id="@+id/messageBtn"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/icon_message"/>
+                android:layout_marginRight="40dp"
+                android:background="@drawable/button_custom_message"/>
 
             <Button
                 android:id="@+id/emailBtn"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="@drawable/icon_email"/>
+                android:background="@drawable/button_custom_email"/>
         </LinearLayout>
 
     </LinearLayout>
