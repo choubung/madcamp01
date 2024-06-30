@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -26,6 +27,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -52,7 +56,12 @@ public class Fragment2 extends Fragment {
 
         recyclerView = rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        imageAdapter = new ImageAdapter(imageList);
+        imageAdapter = new ImageAdapter(imageList, bitmap -> {
+            Intent intent = new Intent(getActivity(), ImageDetailActivity.class);
+            Uri imageUri = saveBitmapToFile(bitmap);
+            intent.putExtra(ImageDetailActivity.EXTRA_IMAGE_URI, imageUri.toString());
+            startActivity(intent);
+        });
         recyclerView.setAdapter(imageAdapter);
 
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
@@ -189,6 +198,19 @@ public class Fragment2 extends Fragment {
                 }
             }
         }
+    }
+
+    private Uri saveBitmapToFile(Bitmap bitmap) {
+        File filesDir = requireContext().getFilesDir();
+        File imageFile = new File(filesDir, "temp_image.png");
+
+        try (FileOutputStream fos = new FileOutputStream(imageFile)) {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return Uri.fromFile(imageFile);
     }
 
     private void selectImage() {
