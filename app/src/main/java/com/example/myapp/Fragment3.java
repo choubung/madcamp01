@@ -110,7 +110,7 @@ public class Fragment3 extends Fragment {
 
             JSONObject jsonObject1 = (JSONObject) jsonArray.get(position);
             editSubject.setText(jsonObject1.getString("subject"));
-            editGreeting.setText(jsonObject1.getString("subject"));
+            editGreeting.setText(jsonObject1.getString("greeting"));
             editText.setText(jsonObject1.getString("text"));
             editConclusion.setText(jsonObject1.getString("conclusion"));
         } catch (Exception e){

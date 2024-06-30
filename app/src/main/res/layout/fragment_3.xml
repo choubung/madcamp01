@@ -28,11 +28,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="당신은"
-                    android:textSize="20dp" />
+                    android:textSize="20sp" />
 
                 <Spinner
                     android:id="@+id/spinner"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
@@ -48,13 +48,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginEnd="15dp"
                     android:text="제목"
-                    android:textSize="15sp" />
+                    android:textSize="16sp" />
 
                 <EditText
                     android:id="@+id/mailSubject"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
@@ -75,7 +75,7 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
                     android:text="첫인사"
                     android:textSize="15sp" />
@@ -86,10 +86,10 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textMultiLine"
-                    android:lines="2"
+                    android:lines="3"
                     android:maxLines="4"
                     android:gravity="top"
-                    android:padding="15dp"
+                    android:padding="8dp"
                     android:textSize="15sp"
                     android:background="@drawable/edge"
                     android:layout_marginVertical="10dp" />
@@ -116,10 +116,10 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:inputType="textMultiLine"
-                    android:lines="6"
+                    android:lines="8"
                     android:maxLines="10"
                     android:gravity="top"
-                    android:padding="15dp"
+                    android:padding="8dp"
                     android:background="@drawable/edge"
                     android:textSize="15sp"
                     android:layout_marginVertical="10dp"/>
@@ -142,7 +142,7 @@
                         android:layout_height="wrap_content"
                         android:text="끝인사"
                         android:textSize="15sp"
-                        android:layout_marginRight="15dp"/>
+                        android:layout_marginEnd="15dp"/>
 
 
                 </LinearLayout>
@@ -153,10 +153,10 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textMultiLine"
-                    android:lines="2"
+                    android:lines="3"
                     android:maxLines="4"
                     android:gravity="top"
-                    android:padding="15dp"
+                    android:padding="8dp"
                     android:background="@drawable/edge"
                     android:textSize="15sp"
                     android:layout_marginVertical="10dp"/>
