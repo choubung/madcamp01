@@ -35,6 +35,21 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
 import static android.app.Activity.RESULT_OK;
 
 public class Fragment2 extends Fragment {
@@ -49,6 +64,11 @@ public class Fragment2 extends Fragment {
     private List<Bitmap> imageList = new ArrayList<>();
     private Button btnSelect, btnDelete;
 
+
+    private static final String SHARED_PREFS_NAME = "image_prefs";
+    private static final String KEY_IMAGE_PATHS = "image_paths";
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,6 +79,7 @@ public class Fragment2 extends Fragment {
         imageAdapter = new ImageAdapter(imageList, bitmap -> {
             Intent intent = new Intent(getActivity(), ImageDetailActivity.class);
             Uri imageUri = saveBitmapToFile(bitmap);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.putExtra(ImageDetailActivity.EXTRA_IMAGE_URI, imageUri.toString());
             startActivity(intent);
         });
@@ -70,9 +91,8 @@ public class Fragment2 extends Fragment {
         btnSelect = rootView.findViewById(R.id.btnSelect);
         btnDelete = rootView.findViewById(R.id.btnDelete);
 
-        btnSelect.setOnClickListener(v -> selectImage());
-        btnDelete.setOnClickListener(v -> deleteImage());
 
+        loadImagesFromStorage();
         return rootView;
     }
 
@@ -191,6 +211,7 @@ public class Fragment2 extends Fragment {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), imageUri);
                     bitmap = rotateImageIfRequired(bitmap, imageUri);
                     Bitmap croppedBitmap = cropToSquare(bitmap);
+                    saveBitmapToFile(croppedBitmap);
                     imageList.add(croppedBitmap);
                     imageAdapter.notifyDataSetChanged();
                 } catch (IOException e) {
@@ -202,8 +223,7 @@ public class Fragment2 extends Fragment {
 
     private Uri saveBitmapToFile(Bitmap bitmap) {
         File filesDir = requireContext().getFilesDir();
-        File imageFile = new File(filesDir, "temp_image.png");
-
+        File imageFile = new File(filesDir, System.currentTimeMillis() + ".png");
         try (FileOutputStream fos = new FileOutputStream(imageFile)) {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
         } catch (IOException e) {
@@ -213,11 +233,25 @@ public class Fragment2 extends Fragment {
         return Uri.fromFile(imageFile);
     }
 
-    private void selectImage() {
-        // 이미지 선택 로직 구현
+
+    private void saveImagePath(String path) {
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Set<String> imagePaths = sharedPreferences.getStringSet(KEY_IMAGE_PATHS, new HashSet<>());
+        imagePaths.add(path);
+        editor.putStringSet(KEY_IMAGE_PATHS, imagePaths);
+        editor.apply();
     }
 
-    private void deleteImage() {
-        // 이미지 삭제 로직 구현
+    private void loadImagesFromStorage() {
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        Set<String> imagePaths = sharedPreferences.getStringSet(KEY_IMAGE_PATHS, new HashSet<>());
+        for (String path : imagePaths) {
+            Bitmap bitmap = BitmapFactory.decodeFile(path);
+            imageList.add(bitmap);
+        }
+        imageAdapter.notifyDataSetChanged();
     }
 }
+
+
