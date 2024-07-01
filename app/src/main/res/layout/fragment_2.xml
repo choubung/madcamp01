@@ -6,14 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".Fragment2">
 
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="160dp"
+        android:layout_height="46dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/logo_text" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/logo"
         android:layout_alignParentBottom="true"
-        android:padding="8dp"
         android:clipToPadding="false"
+        android:padding="8dp"
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="3" />
