@@ -31,7 +31,7 @@ import java.io.InputStreamReader;
 public class Fragment3 extends Fragment {
     EditText editSubject, editGreeting, editText, editConclusion;
     FloatingActionButton button;
-    String[] situations = {"선택하세요...", "출석을 문의한다!", "결석 인정을 문의한다!", "유고결석 증빙자료를 보낸다!", "과제 내용을 여쭤본다!", "빌넣을 한다!", "성적 관련해 문의한다!"};
+    String[] situations = {"지금...", "출석을 문의한다!", "결석 인정을 문의한다!", "유고결석 증빙자료를 보낸다!", "과제 내용을 여쭤본다!", "빌넣을 한다!", "성적 관련해 문의한다!"};
 
     @Nullable
     @Override

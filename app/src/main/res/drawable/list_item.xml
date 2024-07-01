@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- 버튼의 기본 배경 이미지 -->
-    <item android:drawable="@drawable/icon_email" />
+    <item android:drawable="@drawable/edge" />
     <!-- 터치 효과 (ripple 효과) -->
     <item>
         <ripple android:color="?attr/colorControlHighlight">
