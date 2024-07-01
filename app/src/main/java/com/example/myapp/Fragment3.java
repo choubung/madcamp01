@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -27,11 +28,16 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Fragment3 extends Fragment {
     EditText editSubject, editGreeting, editText, editConclusion;
+    AutoCompleteTextView dearTextView;
     FloatingActionButton button;
     String[] situations = {"지금...", "출석을 문의한다!", "결석 인정을 문의한다!", "유고결석 증빙자료를 보낸다!", "과제 내용을 여쭤본다!", "빌넣을 한다!", "성적 관련해 문의한다!"};
+    ArrayAdapter<String> nameAdapter;
+    List<ContactEntity> allContacts;
 
     @Nullable
     @Override
@@ -42,6 +48,26 @@ public class Fragment3 extends Fragment {
         editGreeting = rootView.findViewById(R.id.greetingText);
         editText = rootView.findViewById(R.id.textText);
         editConclusion = rootView.findViewById(R.id.mailConclusion);
+
+        dearTextView = rootView.findViewById(R.id.editDear);
+
+        // 교수님 자동완성을 위한 AutoCompleteTextView 셋업
+        nameAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line);
+        dearTextView.setAdapter(nameAdapter);
+
+        // Fetch all contacts from database asynchronously
+        new Thread(() -> {
+            ContactDatabase db = ContactDatabase.getInstance(getContext());
+            allContacts = db.getContactDao().getAllContact();
+
+            getActivity().runOnUiThread(() -> {
+                List<String> names = new ArrayList<>();
+                for (ContactEntity contact : allContacts) {
+                    names.add(contact.getName());
+                }
+                nameAdapter.addAll(names);
+            });
+        }).start();
 
         Spinner spinner1 = rootView.findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, situations);
@@ -67,10 +93,22 @@ public class Fragment3 extends Fragment {
             }
         });
 
+        // Handle selection of professor from the dropdown
+        dearTextView.setOnItemClickListener((adapterView, view, position, id) -> {
+            String selectedName = nameAdapter.getItem(position);
+            for (ContactEntity contact : allContacts) {
+                if (contact.getName().equals(selectedName)) {
+                    dearTextView.setText(contact.getEmail());
+                    break;
+                }
+            }
+        });
+
         button = rootView.findViewById(R.id.send_btn);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String professor = dearTextView.getText().toString();
                 String subject = editSubject.getText().toString();
                 String greeting = editGreeting.getText().toString();
                 String text = editText.getText().toString();
@@ -80,7 +118,7 @@ public class Fragment3 extends Fragment {
                 try {
                     Intent mail_intent = new Intent(Intent.ACTION_SENDTO);
                     mail_intent.setData(Uri.parse("mailto:"));
-                    mail_intent.putExtra(Intent.EXTRA_EMAIL, new String[]{});
+                    mail_intent.putExtra(Intent.EXTRA_EMAIL, new String[]{professor});
                     mail_intent.putExtra(Intent.EXTRA_SUBJECT, subject);
                     mail_intent.putExtra(Intent.EXTRA_TEXT, textAll);
                     startActivity(mail_intent);
