@@ -5,8 +5,21 @@ import android.widget.ImageView;
 import java.io.Serializable;
 
 public class ContactItem implements Serializable { // 다른 개체로 넘기기 위해 Serializable implement
-    String name, department, phoneNumber, email;
-    ImageView profile = null;
+    private int idx;
+    private String name, department, phoneNumber, email;
+    private ImageView profile = null;
+
+    public ContactItem() {
+        this.idx = 0;
+    }
+
+    public ContactItem(int idx, String name, String department, String phoneNumber, String email) {
+        this.idx = idx;
+        this.name = name;
+        this.department = department;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
 
     public ContactItem(String name, String department, String phoneNumber, String email) {
         this.name = name;
@@ -22,6 +35,14 @@ public class ContactItem implements Serializable { // 다른 개체로 넘기기
         this.email = email;
         this.profile = profile;
     }*/
+
+    public int getIdx() {
+        return idx;
+    }
+
+    public void setIdx(int idx) {
+        this.idx = idx;
+    }
 
     public String getName() {
         return name;

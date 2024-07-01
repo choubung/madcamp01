@@ -88,9 +88,12 @@ public class Fragment2 extends Fragment {
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
         fab.setOnClickListener(v -> showImageSourceDialog());
 
-        btnSelect = rootView.findViewById(R.id.btnSelect);
-        btnDelete = rootView.findViewById(R.id.btnDelete);
-
+        //사진 선택 삭제 버튼 주석처리
+//        btnSelect = rootView.findViewById(R.id.btnSelect);
+//        btnDelete = rootView.findViewById(R.id.btnDelete);
+//
+//        btnSelect.setOnClickListener(v -> selectImage());
+//        btnDelete.setOnClickListener(v -> deleteImage());
 
         loadImagesFromStorage();
         return rootView;
@@ -253,5 +256,3 @@ public class Fragment2 extends Fragment {
         imageAdapter.notifyDataSetChanged();
     }
 }
-
-
