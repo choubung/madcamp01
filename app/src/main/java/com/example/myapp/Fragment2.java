@@ -59,6 +59,7 @@ public class Fragment2 extends Fragment {
         imageAdapter = new ImageAdapter(imageList, bitmap -> {
             Intent intent = new Intent(getActivity(), ImageDetailActivity.class);
             Uri imageUri = saveBitmapToFile(bitmap);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); // 이 부분을 추가
             intent.putExtra(ImageDetailActivity.EXTRA_IMAGE_URI, imageUri.toString());
             startActivity(intent);
         });
@@ -67,11 +68,12 @@ public class Fragment2 extends Fragment {
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
         fab.setOnClickListener(v -> showImageSourceDialog());
 
-        btnSelect = rootView.findViewById(R.id.btnSelect);
-        btnDelete = rootView.findViewById(R.id.btnDelete);
-
-        btnSelect.setOnClickListener(v -> selectImage());
-        btnDelete.setOnClickListener(v -> deleteImage());
+        //사진 선택 삭제 버튼 주석처리
+//        btnSelect = rootView.findViewById(R.id.btnSelect);
+//        btnDelete = rootView.findViewById(R.id.btnDelete);
+//
+//        btnSelect.setOnClickListener(v -> selectImage());
+//        btnDelete.setOnClickListener(v -> deleteImage());
 
         return rootView;
     }

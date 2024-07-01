@@ -114,7 +114,7 @@ public class Fragment1 extends Fragment {
     private void showDeleteConfirmationDialog(ContactItem item) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("삭제 확인")
-                .setMessage(item.getName() + "을(를) 삭제하시겠습니까?")
+                .setMessage(item.getName() + " 교수님을 삭제하시겠습니까?")
                 .setPositiveButton("삭제", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
