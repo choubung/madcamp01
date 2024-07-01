@@ -66,21 +66,10 @@ public class Fragment1 extends Fragment {
         });
 
         adapter.setOnItemLongClickListener(new ContactAdapter.OnItemLongClickListener() {
-            // TODO 삭제 처리
             @Override
             public void onItemLongClick(ContactAdapter.ViewHolder holder, View view, int position) {
                 ContactItem item = adapter.getItem(position);
                 showDeleteConfirmationDialog(item);
-//                ContactItem item = adapter.getItem(position);
-//
-//                int idx = item.getIdx(); // ContactItem에 설정된 idx 사용
-//
-//                // 데이터베이스에서 삭제
-//                new DeleteContact(getActivity().getApplicationContext(), idx).start();
-//
-//                // 리스트에서 아이템 제거 및 UI 업데이트
-//                contactItems.remove(position);
-//                adapter.notifyItemRemoved(position);
             }
         });
 
