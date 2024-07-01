@@ -2,76 +2,124 @@
     "contact_list":
     [
         {
-            "name":"김*균",
-            "department":"소프트웨어학부",
-            "phoneNumber":"02)710-0001",
-            "email":"soft01@sm.ac.kr"
+            "name":"이지혁",
+            "department":"전산학부",
+            "phoneNumber":"010-2003-1114",
+            "email":"jihuck@madcamp.com"
         },
         {
-            "name":"최*원",
-            "department":"소프트웨어학부",
-            "phoneNumber":"02)710-0002",
-            "email":"soft02@sm.ac.kr"
+            "name":"신서원",
+            "department":"전산학부/기술경영학부",
+            "phoneNumber":"010-2002-1030",
+            "email":"seowon@madcamp.com"
         },
         {
-            "name":"창*모",
-            "department":"소프트웨어학부",
-            "phoneNumber":"02)710-0003",
-            "email":"soft03@sm.ac.kr"
+            "name":"김원중",
+            "department":"전산학부",
+            "phoneNumber":"010-2002-1016",
+            "email":"wonjung@madcamp.com"
         },
         {
-            "name":"최*우",
-            "department":"소프트웨어학부",
-            "phoneNumber":"02)710-0004",
-            "email":"soft04@sm.ac.kr"
+            "name":"배준형",
+            "department":"전산학부",
+            "phoneNumber":"010-2003-0526",
+            "email":"junhyung@madcamp.com"
         },
         {
-            "name":"유*종",
-            "department":"소프트웨어학부",
-            "phoneNumber":"02)710-0005",
-            "email":"soft05@sm.ac.kr"
+            "name":"김동연",
+            "department":"전산학부",
+            "phoneNumber":"010-2001-0620",
+            "email":"dongyeon@madcamp.com"
         },
         {
-            "name":"이*용",
-            "department":"소프트웨어학부",
-            "phoneNumber":"02)710-0006",
-            "email":"it06@sm.ac.kr"
+            "name":"김수환",
+            "department":"화공생명공학과",
+            "phoneNumber":"010-2002-0424",
+            "email":"suhwan@madcamp.com"
         },
         {
-            "name":"윤*익",
-            "department":"인공지능공학부",
-            "phoneNumber":"02)710-0011",
-            "email":"it01@sm.ac.kr"
+            "name":"정재용",
+            "department":"전산학/산업디자인",
+            "phoneNumber":"010-2002-0407",
+            "email":"jaeyoung@madcamp.com"
         },
         {
-            "name":"이*우",
-            "department":"인공지능공학부",
-            "phoneNumber":"02)710-0012",
-            "email":"it02@sm.ac.kr"
+            "name":"안지형",
+            "department":"컴퓨터학과",
+            "phoneNumber":"010-2002-0520",
+            "email":"jihyung@madcamp.com"
         },
         {
-            "name":"김*연",
-            "department":"인공지능공학부",
-            "phoneNumber":"02)710-0013",
-            "email":"it03@sm.ac.kr"
+            "name":"이시웅",
+            "department":"정보컴퓨터",
+            "phoneNumber":"010-2001-0807",
+            "email":"siwong@madcamp.com"
         },
         {
-            "name":"박*진",
-            "department":"인공지능공학부",
-            "phoneNumber":"02)710-0014",
-            "email":"it04@sm.ac.kr"
+            "name":"이수민",
+            "department":"전기및전자공학부/전산학부",
+            "phoneNumber":"010-2001-1111",
+            "email":"sumin@madcamp.com"
         },
         {
-            "name":"김*규",
-            "department":"인공지능공학부",
-            "phoneNumber":"02)710-0015",
-            "email":"it05@sm.ac.kr"
+            "name":"정우성",
+            "department":"정보시스템학과",
+            "phoneNumber":"010-2000-0107",
+            "email":"wusung@madcamp.com"
         },
         {
-            "name":"강*우",
-            "department":"인공지능공학부",
-            "phoneNumber":"02)710-0016",
-            "email":"it06@sm.ac.kr"
+            "name":"김진환",
+            "department":"전자과",
+            "phoneNumber":"010-2001-0408",
+            "email":"jinhwan@madcamp.com"
+        },
+        {
+            "name":"이시준",
+            "department":"수학과/컴퓨터소프트웨어학부",
+            "phoneNumber":"010-2002-0903",
+            "email":"sijun@madcamp.com"
+        },
+        {
+            "name":"이효정",
+            "department":"컴퓨터소프트웨어학부",
+            "phoneNumber":"010-2004-0102",
+            "email":"hyojung@madcamp.com"
+        },
+        {
+            "name":"김사랑",
+            "department":"영어교육/컴퓨터공학",
+            "phoneNumber":"010-2001-0104",
+            "email":"sarang@madcamp.com"
+        },
+        {
+            "name":"김은서",
+            "department":"컴퓨터학과",
+            "phoneNumber":"010-2003-1215",
+            "email":"eunseo@madcamp.com"
+        },
+        {
+            "name":"정재현",
+            "department":"전산학부",
+            "phoneNumber":"010-2002-0507",
+            "email":"jaehyeon@madcamp.com"
+        },
+        {
+            "name":"곽지원",
+            "department":"IT공학",
+            "phoneNumber":"010-2002-1011",
+            "email":"jiwon@madcamp.com"
+        },
+        {
+            "name":"박종민",
+            "department":"인공지능융합전공",
+            "phoneNumber":"010-2003-0808",
+            "email":"jongmin@madcamp.com"
+        },
+        {
+            "name":"이예린",
+            "department":"전산학부",
+            "phoneNumber":"010-2004-0207",
+            "email":"yerin@madcamp.com"
         }
     ]
 }
