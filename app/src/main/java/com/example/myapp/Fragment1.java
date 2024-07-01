@@ -16,9 +16,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -36,8 +39,9 @@ public class Fragment1 extends Fragment {
     LinearLayoutManager layoutManager;
     ContactAdapter adapter;
     ArrayList<ContactItem> contactItems = new ArrayList<>();
+    ArrayList<ContactItem> filteredList = new ArrayList<>();
     FloatingActionButton fab;
-    Boolean parserFlag = true;
+    EditText editSearch;
     private ActivityResultLauncher<Intent> addContactLauncher;
 
     @Nullable
@@ -53,6 +57,25 @@ public class Fragment1 extends Fragment {
         recyclerView.setAdapter(adapter);
 
         initContactData();
+
+        editSearch = (EditText) rootView.findViewById(R.id.editSearch);
+        editSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // 비어 있음
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                ///
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String searchText = editSearch.getText().toString();
+                searchFilter(searchText);
+            }
+        });
 
         adapter.setOnItemClickListener(new ContactAdapter.OnItemClickListener() {
             // 클릭시 상세 페이지 보여줌
@@ -101,6 +124,18 @@ public class Fragment1 extends Fragment {
         });
 
         return rootView;
+    }
+
+    public void searchFilter(String searchText) {
+        filteredList.clear();
+
+        for (int i = 0; i < contactItems.size(); i++) {
+            if (contactItems.get(i).getName().toLowerCase().contains(searchText.toLowerCase())) {
+                filteredList.add(contactItems.get(i));
+            }
+        }
+
+        adapter.filterList(filteredList);
     }
 
     // 데이터 초기화 및 가져오기

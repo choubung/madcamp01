@@ -19,6 +19,12 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
         return contactItems.get(position);
     }
 
+    // 검색 기능 구현을 위한 filterList
+    public void  filterList(ArrayList<ContactItem> filteredList) {
+        contactItems = filteredList;
+        notifyDataSetChanged();
+    }
+
     public interface OnItemClickListener {
         void onItemClick(ViewHolder holder, View view, int position);
     }
