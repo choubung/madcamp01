@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,14 +36,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Fragment1 extends Fragment {
-    RecyclerView recyclerView;
+    RecyclerView recyclerView; // 연락처 목록 뷰
     LinearLayoutManager layoutManager;
-    ContactAdapter adapter;
-    ArrayList<ContactItem> contactItems = new ArrayList<>();
-    ArrayList<ContactItem> filteredList = new ArrayList<>();
+    ContactAdapter adapter; // 연락처 관리 어댑터
+    ArrayList<ContactItem> contactItems = new ArrayList<>(); // 기본 목록
+    ArrayList<ContactItem> filteredList = new ArrayList<>(); // 검색했을 때 목록
     FloatingActionButton fab;
-    EditText editSearch;
-    private ActivityResultLauncher<Intent> addContactLauncher;
+    EditText editSearch; // 검색바
+    private ActivityResultLauncher<Intent> addContactLauncher; // 입력창에서 정보를 받아오기 위한 런처
 
     @Nullable
     @Override
@@ -54,9 +55,7 @@ public class Fragment1 extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new ContactAdapter(getActivity().getApplicationContext(), contactItems);
-        recyclerView.setAdapter(adapter);
-
-        initContactData();
+        recyclerView.setAdapter(adapter); // 기본 뷰 세팅
 
         editSearch = (EditText) rootView.findViewById(R.id.editSearch);
         editSearch.addTextChangedListener(new TextWatcher() {
@@ -107,8 +106,6 @@ public class Fragment1 extends Fragment {
                         String email = result.getData().getStringExtra("email");
 
                         ContactItem newItem = new ContactItem(name, department, number, email);
-//                        contactItems.add(newItem);
-//                        adapter.notifyItemInserted(contactItems.size() - 1);  // 변경된 위치가 마지막 인덱스이므로 -1을 해준다.
                         new AddContact(getActivity(), newItem).start();
                     }
                 }
@@ -126,16 +123,36 @@ public class Fragment1 extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initContactData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // UI 갱신을 위해 데이터를 다시 로드
+        refreshContactList();
+    }
+
+    private void refreshContactList() {
+        // 기존의 리스트를 비우고 데이터베이스에서 다시 로드
+        contactItems.clear();
+        new GetContact(getActivity()).start();
+    }
+
+
     public void searchFilter(String searchText) {
         filteredList.clear();
 
-        for (int i = 0; i < contactItems.size(); i++) {
-            if (contactItems.get(i).getName().toLowerCase().contains(searchText.toLowerCase())) {
-                filteredList.add(contactItems.get(i));
+        for (ContactItem item : contactItems) {
+            if (item.getName().toLowerCase().contains(searchText.toLowerCase())) {
+                filteredList.add(item);
             }
         }
 
-        adapter.filterList(filteredList);
+        adapter.filterList(filteredList); // 어댑터에 필터링된 리스트 전달
     }
 
     // 데이터 초기화 및 가져오기
@@ -150,18 +167,13 @@ public class Fragment1 extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("삭제 확인")
                 .setMessage(item.getName() + " 교수님을 삭제하시겠습니까?")
-                .setPositiveButton("삭제", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        new DeleteContact(getActivity(), item.getIdx()).start();
-                    }
-                })
+                .setPositiveButton("삭제", (dialogInterface, i) -> new DeleteContact(getActivity(), item.getIdx()).start())
                 .setNegativeButton("취소", null)
                 .show();
     }
 
-    class AddContact extends Thread {
-        // DB에 넣고 리사이클러 뷰 갱신
+    class AddContact extends Thread { // DB에 넣고 리사이클러 뷰 갱신
+        String TAG = "AddContact";
         private Context context;
         ContactItem item;
 
@@ -172,37 +184,33 @@ public class Fragment1 extends Fragment {
 
         @Override
         public void run() {
+            Log.d(TAG, "실행 시작");
             ContactEntity contact = new ContactEntity(item.getName(), item.getDepartment(), item.getPhoneNumber(), item.getEmail());
-            long newIdx = ContactDatabase.getInstance(context).getContactDao().insert(contact);
+            long newIdx = ContactDatabase.getInstance(context).getContactDao().insert(contact); // 새로 만든 entity contact를 넣기
             item.setIdx((int) newIdx); // 새로 추가된 연락처의 idx 설정
+            Log.d(TAG, "DB에 데이터추가 완료");
 
             // UI 갱신
-            getActivity().runOnUiThread(new Runnable() {
+            getActivity().runOnUiThread(() -> {
+                adapter.addItem(item); // 어댑터에 추가
+                Log.d(TAG, "기본 목록에 데이터 추가 및 UI 갱신");
+            });
+
+            /* 기존의 경우 스레드에서 뷰 갱신
+            new Runnable() {
                 @Override
                 public void run() {
                     contactItems.add(item);
+                    Log.d(TAG, "기본 목록에 데이터 추가");
                     adapter.notifyItemInserted(contactItems.size() - 1);
+                    Log.d(TAG, "notifyItemInserted");
                 }
-            });
-        }
-    }
-
-    class UpdateContact extends Thread {
-        private Context context;
-        private ContactEntity contact; // 업데이트할 연락처 객체
-
-        public UpdateContact(Context context, ContactEntity contact) {
-            this.context = context;
-            this.contact = contact;
-        }
-
-        @Override
-        public void run() {
-            ContactDatabase.getInstance(context).getContactDao().update(contact);
+            });*/
         }
     }
 
     class GetContact extends Thread {
+        String TAG = "GetContact";
         private Context context;
 
         public GetContact(Context context) {
@@ -211,28 +219,39 @@ public class Fragment1 extends Fragment {
 
         @Override
         public void run() {
-            List<ContactEntity> entities = ContactDatabase.getInstance(context).getContactDao().getAllContact();
-            if (entities.size() == 0) {
-                // 최초 실행 시 JSON 파일에서 데이터베이스에 데이터 추가
+            Log.d(TAG, "기본 목록에 데이터 추가");
+
+            // 데이터베이스의 현재 데이터 수를 확인
+            int contactCount = ContactDatabase.getInstance(context).getContactDao().getContactCount();
+            if (contactCount == 0) {
+                // 데이터가 없을 때만 JSON 파싱 및 삽입
                 parserJsonAndInsert(context);
+
+                // JSON 데이터 삽입 후 새로 갱신된 데이터를 로드
+                List<ContactEntity> updatedEntities = ContactDatabase.getInstance(context).getContactDao().getAllContact();
+                for (ContactEntity entity : updatedEntities) {
+                    ContactItem item = new ContactItem(entity.getIdx(), entity.getName(), entity.getDepartment(), entity.getPhone(), entity.getEmail());
+                    contactItems.add(item);
+                }
+                getActivity().runOnUiThread(() -> {
+                    adapter.notifyDataSetChanged();
+                });
             } else {
-                // 이미 데이터베이스에 데이터가 있으면 그 데이터로 UI 갱신
+                // 데이터가 이미 있을 경우 기존 데이터 로드
+                List<ContactEntity> entities = ContactDatabase.getInstance(context).getContactDao().getAllContact();
                 for (ContactEntity entity : entities) {
                     ContactItem item = new ContactItem(entity.getIdx(), entity.getName(), entity.getDepartment(), entity.getPhone(), entity.getEmail());
                     contactItems.add(item);
                 }
-                // UI 갱신
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.notifyDataSetChanged();
-                    }
+                getActivity().runOnUiThread(() -> {
+                    adapter.notifyDataSetChanged();
                 });
             }
         }
     }
 
     class DeleteContact extends Thread {
+        String TAG = "DeleteContact";
         private Context context;
         private int idx; // 삭제할 연락처의 인덱스
 
@@ -243,23 +262,57 @@ public class Fragment1 extends Fragment {
 
         @Override
         public void run() {
+            Log.d(TAG, "실행 시작");
             ContactDatabase.getInstance(context).getContactDao().delete(idx);
+            Log.d(TAG, "DB 삭제");
 
             // UI 갱신
-            getActivity().runOnUiThread(new Runnable() {
+            getActivity().runOnUiThread(() -> {
+                for (int i = 0; i < contactItems.size(); i++) {
+                    if (contactItems.get(i).getIdx() == idx) {
+                        contactItems.remove(i);
+                        adapter.removeItem(i); // 어댑터에 삭제 알림/어댑터가 관리
+                        break;
+                    }
+                }
+            });
+
+            /*
+            스레드에서 모든 걸 처리하던 기존 코드...
+            new Runnable() {
                 @Override
                 public void run() {
+                    Log.d(TAG, "UI 갱신");
                     for (int i = 0; i < contactItems.size(); i++) {
                         if (contactItems.get(i).getIdx() == idx) {
+                            Log.d(TAG, "삭제할 인덱스의 아이템 찾음");
                             contactItems.remove(i);
+                            Log.d(TAG, "리사이클러 뷰에서 삭제");
                             adapter.notifyItemRemoved(i);
+                            Log.d(TAG, "notifyItemRemoved");
+
                             break;
                         }
                     }
                 }
-            });
+            });*/
         }
     }
+
+//    class UpdateContact extends Thread {
+//        private Context context;
+//        private ContactEntity contact; // 업데이트할 연락처 객체
+//
+//        public UpdateContact(Context context, ContactEntity contact) {
+//            this.context = context;
+//            this.contact = contact;
+//        }
+//
+//        @Override
+//        public void run() {
+//            ContactDatabase.getInstance(context).getContactDao().update(contact);
+//        }
+//    }
 
     private void parserJsonAndInsert(Context context) {
         InputStream inputStream = getResources().openRawResource(R.raw.contactlist);
