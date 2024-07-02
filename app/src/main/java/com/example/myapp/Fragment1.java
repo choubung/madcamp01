@@ -212,23 +212,18 @@ public class Fragment1 extends Fragment {
         @Override
         public void run() {
             List<ContactEntity> entities = ContactDatabase.getInstance(context).getContactDao().getAllContact();
-            if (entities.size() == 0) {
-                // 최초 실행 시 JSON 파일에서 데이터베이스에 데이터 추가
-                parserJsonAndInsert(context);
-            } else {
-                // 이미 데이터베이스에 데이터가 있으면 그 데이터로 UI 갱신
-                for (ContactEntity entity : entities) {
-                    ContactItem item = new ContactItem(entity.getIdx(), entity.getName(), entity.getDepartment(), entity.getPhone(), entity.getEmail());
-                    contactItems.add(item);
-                }
-                // UI 갱신
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+             for (ContactEntity entity : entities) {
+                 ContactItem item = new ContactItem(entity.getIdx(), entity.getName(), entity.getDepartment(), entity.getPhone(), entity.getEmail());
+                 contactItems.add(item);
+             }
+             // UI 갱신
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
                         adapter.notifyDataSetChanged();
                     }
-                });
-            }
+            });
+
         }
     }
 
@@ -261,43 +256,43 @@ public class Fragment1 extends Fragment {
         }
     }
 
-    private void parserJsonAndInsert(Context context) {
-        InputStream inputStream = getResources().openRawResource(R.raw.contactlist);
-        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-        StringBuffer stringBuffer = new StringBuffer();
-        String line;
-
-        try {
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuffer.append(line);
-            }
-
-            JSONObject jsonObject = new JSONObject(stringBuffer.toString());
-            JSONArray jsonArray = new JSONArray(jsonObject.getString("contact_list"));
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject1 = (JSONObject) jsonArray.get(i);
-
-                String name = jsonObject1.getString("name");
-                String department = jsonObject1.getString("department");
-                String phoneNumber = jsonObject1.getString("phoneNumber");
-                String email = jsonObject1.getString("email");
-
-                ContactItem item = new ContactItem(name, department, phoneNumber, email);
-                new AddContact(context, item).start();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                inputStream.close();
-                inputStreamReader.close();
-                bufferedReader.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    private void parserJsonAndInsert(Context context) {
+//        InputStream inputStream = getResources().openRawResource(R.raw.contactlist);
+//        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+//        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+//
+//        StringBuffer stringBuffer = new StringBuffer();
+//        String line;
+//
+//        try {
+//            while ((line = bufferedReader.readLine()) != null) {
+//                stringBuffer.append(line);
+//            }
+//
+//            JSONObject jsonObject = new JSONObject(stringBuffer.toString());
+//            JSONArray jsonArray = new JSONArray(jsonObject.getString("contact_list"));
+//
+//            for (int i = 0; i < jsonArray.length(); i++) {
+//                JSONObject jsonObject1 = (JSONObject) jsonArray.get(i);
+//
+//                String name = jsonObject1.getString("name");
+//                String department = jsonObject1.getString("department");
+//                String phoneNumber = jsonObject1.getString("phoneNumber");
+//                String email = jsonObject1.getString("email");
+//
+//                ContactItem item = new ContactItem(name, department, phoneNumber, email);
+//                new AddContact(context, item).start();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                inputStream.close();
+//                inputStreamReader.close();
+//                bufferedReader.close();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 }
