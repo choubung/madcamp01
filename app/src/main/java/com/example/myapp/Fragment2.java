@@ -43,6 +43,13 @@ import java.util.Set;
 import static android.app.Activity.RESULT_OK;
 
 
+import androidx.core.content.FileProvider;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+
 public class Fragment2 extends Fragment {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -53,12 +60,10 @@ public class Fragment2 extends Fragment {
     private RecyclerView recyclerView;
     private ImageAdapter imageAdapter;
     private List<Uri> imageUriList = new ArrayList<>();
-    private Button btnSelect, btnDelete;
-
+    private String currentPhotoPath;
 
     private static final String SHARED_PREFS_NAME = "image_prefs";
     private static final String KEY_IMAGE_PATHS = "image_paths";
-
 
     @Nullable
     @Override
@@ -77,12 +82,6 @@ public class Fragment2 extends Fragment {
 
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
         fab.setOnClickListener(v -> showImageSourceDialog());
-
-        // 사진 선택 삭제 버튼 주석처리
-        // btnSelect = rootView.findViewById(R.id.btnSelect);
-        // btnDelete = rootView.findViewById(R.id.btnDelete);
-        // btnSelect.setOnClickListener(v -> selectImage());
-        // btnDelete.setOnClickListener(v -> deleteImage());
 
         loadImagesFromStorage();
         return rootView;
@@ -128,9 +127,34 @@ public class Fragment2 extends Fragment {
         } else {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (takePictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                if (photoFile != null) {
+                    Uri photoURI = FileProvider.getUriForFile(requireContext(),
+                            "com.example.myapp.fileprovider",
+                            photoFile);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
             }
         }
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = requireContext().getExternalFilesDir(null);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 
     @Override
@@ -192,10 +216,9 @@ public class Fragment2 extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_IMAGE_CAPTURE && data != null && data.getExtras() != null) {
-                Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
-                Bitmap croppedBitmap = cropToSquare(imageBitmap);
-                Uri imageUri = saveBitmapToFile(croppedBitmap);
+            if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                File imageFile = new File(currentPhotoPath);
+                Uri imageUri = Uri.fromFile(imageFile);
                 imageUriList.add(imageUri);
                 imageAdapter.notifyDataSetChanged();
             } else if (requestCode == REQUEST_IMAGE_PICK && data != null && data.getData() != null) {
@@ -224,7 +247,6 @@ public class Fragment2 extends Fragment {
         }
         return Uri.fromFile(imageFile);
     }
-
 
     private void saveImagePath(String path) {
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
