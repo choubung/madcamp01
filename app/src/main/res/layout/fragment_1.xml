@@ -27,6 +27,7 @@
             android:background="@drawable/edge"
             android:layout_marginHorizontal="15dp"
             android:padding="10dp"
+            android:maxLines="1"
             android:hint="성함으로 교수님을 찾아보자..."
             android:textSize="15sp"
             android:layout_marginBottom="15dp"/>

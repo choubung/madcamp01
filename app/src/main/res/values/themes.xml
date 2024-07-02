@@ -2,7 +2,9 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.MyApp" parent="Theme.Material3.Light.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- font-->
+        <item name="fontFamily">@font/uhbeesehyunbold</item>
+
         <item name="colorPrimary">#343a40</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/black</item>

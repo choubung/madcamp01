@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- EditText에만 적용할 스타일 -->
+    <style name="CustomEditTextStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="android:fontFamily">@font/noto_san_kr_regular</item>
+    </style>
+
+</resources>

@@ -1,14 +1,17 @@
 package com.example.myapp;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,11 +48,24 @@ public class Fragment3 extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_3, container, false);
 
         editSubject = rootView.findViewById(R.id.mailSubject);
+        editSubject.setTypeface(null);
+        editSubject.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+
         editGreeting = rootView.findViewById(R.id.greetingText);
+        editGreeting.setTypeface(null);
+        editGreeting.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+
         editText = rootView.findViewById(R.id.textText);
+        editText.setTypeface(null);
+        editText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+
         editConclusion = rootView.findViewById(R.id.mailConclusion);
+        editConclusion.setTypeface(null);
+        editConclusion.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
 
         dearTextView = rootView.findViewById(R.id.editDear);
+        dearTextView.setTypeface(null);
+        dearTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
 
         // 교수님 자동완성을 위한 AutoCompleteTextView 셋업
         nameAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line);
