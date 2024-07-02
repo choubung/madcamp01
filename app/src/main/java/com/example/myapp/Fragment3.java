@@ -35,7 +35,7 @@ public class Fragment3 extends Fragment {
     EditText editSubject, editGreeting, editText, editConclusion;
     AutoCompleteTextView dearTextView;
     FloatingActionButton button;
-    String[] situations = {"지금...", "출석을 문의한다!", "결석 인정을 문의한다!", "유고결석 증빙자료를 보낸다!", "과제 내용을 여쭤본다!", "빌넣을 한다!", "성적 관련해 문의한다!"};
+    String[] situations = {"지금...", "출석을 문의 중", "결석 인정을 문의 중", "유고결석 증빙자료를 보내는 중", "과제 내용을 여쭤보는 중", "빌넣을 하는 중", "성적 관련해 문의하는 중"};
     ArrayAdapter<String> nameAdapter;
     List<ContactEntity> allContacts;
 

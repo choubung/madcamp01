@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:text="000 교수님"
-                android:textSize="40sp" />
+                android:textSize="33sp" />
 
             <TextView
                 android:id="@+id/department"
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="45dp"
                 android:text="빵많이먹기전공"
-                android:textSize="18sp" />
+                android:textSize="17sp" />
 
             <TextView
                 android:id="@+id/phoneNumber"
@@ -61,14 +61,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:text="010-1234-5678"
-                android:textSize="25sp" />
+                android:textSize="21sp" />
 
             <TextView
                 android:id="@+id/email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="tjdtlaekd@sm.ac.kr"
-                android:textSize="23sp" />
+                android:textSize="22sp" />
 
         </LinearLayout>
 
@@ -81,22 +81,22 @@
 
             <Button
                 android:id="@+id/callBtn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginRight="40dp"
                 android:background="@drawable/button_custom_call"/>
 
             <Button
                 android:id="@+id/messageBtn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginRight="40dp"
                 android:background="@drawable/button_custom_message"/>
 
             <Button
                 android:id="@+id/emailBtn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:background="@drawable/button_custom_email"/>
         </LinearLayout>
 
