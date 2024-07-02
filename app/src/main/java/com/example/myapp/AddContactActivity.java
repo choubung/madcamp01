@@ -1,17 +1,11 @@
 package com.example.myapp;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class AddContactActivity extends AppCompatActivity {
     EditText name, department, number, email;
@@ -21,12 +15,23 @@ public class AddContactActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_contact);
 
-        name = (EditText) findViewById(R.id.editTextName);
-        department = (EditText) findViewById(R.id.editTextDepartment);
-        number = (EditText) findViewById(R.id.editTextPhone);
-        email = (EditText) findViewById(R.id.editTextEmail);
+        name = findViewById(R.id.editTextName);
+        name.setTypeface(null);
+        name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
 
-        Button cancelBtn = (Button) findViewById(R.id.cancelBtn);
+        department =  findViewById(R.id.editTextDepartment);
+        department.setTypeface(null);
+        department.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+
+        number = findViewById(R.id.editTextPhone);
+        number.setTypeface(null);
+        number.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+
+        email = findViewById(R.id.editTextEmail);
+        email.setTypeface(null);
+        email.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+
+        Button cancelBtn = findViewById(R.id.cancelBtn);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -34,7 +39,7 @@ public class AddContactActivity extends AppCompatActivity {
             }
         });
 
-        Button saveBtn = (Button) findViewById(R.id.saveBtn);
+        Button saveBtn = findViewById(R.id.saveBtn);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

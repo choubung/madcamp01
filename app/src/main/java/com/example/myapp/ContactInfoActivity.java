@@ -1,20 +1,14 @@
 package com.example.myapp;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.RippleDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 
@@ -30,14 +24,25 @@ public class ContactInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contact_info);
 
         name = findViewById(R.id.name);
+        name.setTypeface(null);
+        name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 33);
+
         department = findViewById(R.id.department);
+        department.setTypeface(null);
+        department.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+
         phoneNumber = findViewById(R.id.phoneNumber);
+        phoneNumber.setTypeface(null);
+        phoneNumber.setTextSize(TypedValue.COMPLEX_UNIT_SP, 21);
+
         email = findViewById(R.id.email);
+        email.setTypeface(null);
+        email.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
 
         Intent passedIntent = getIntent();
         processIntent(passedIntent);
 
-        callBtn = (Button) findViewById(R.id.callBtn);
+        callBtn = findViewById(R.id.callBtn);
         callBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,7 +50,7 @@ public class ContactInfoActivity extends AppCompatActivity {
             }
         });
 
-        messageBtn = (Button) findViewById(R.id.messageBtn);
+        messageBtn = findViewById(R.id.messageBtn);
         messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,7 +58,7 @@ public class ContactInfoActivity extends AppCompatActivity {
             }
         });
 
-        emailBtn = (Button) findViewById(R.id.emailBtn);
+        emailBtn = findViewById(R.id.emailBtn);
         emailBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,7 +74,7 @@ public class ContactInfoActivity extends AppCompatActivity {
             }
         });
 
-        Button button = (Button) findViewById(R.id.back);
+        Button button = findViewById(R.id.back);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
