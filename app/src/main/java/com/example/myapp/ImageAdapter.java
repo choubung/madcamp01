@@ -8,20 +8,27 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import android.net.Uri;
+
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
+
+import java.util.List;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
-    private List<Bitmap> imageList;
+    private List<Uri> imageUriList;
     private OnImageClickListener listener;
 
     public interface OnImageClickListener {
-        void onImageClick(Bitmap bitmap);
+        void onImageClick(Uri uri);
     }
 
-    public ImageAdapter(List<Bitmap> imageList, OnImageClickListener listener) {
-        this.imageList = imageList;
+    public ImageAdapter(List<Uri> imageUriList, OnImageClickListener listener) {
+        this.imageUriList = imageUriList;
         this.listener = listener;
     }
 
@@ -34,13 +41,19 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.imageView.setImageBitmap(imageList.get(position));
-        holder.itemView.setOnClickListener(v -> listener.onImageClick(imageList.get(position)));
+        Uri imageUri = imageUriList.get(position);
+
+        Glide.with(holder.itemView.getContext())
+                .load(imageUri)
+                .apply(new RequestOptions().transform(new CircleCrop()))
+                .into(holder.imageView);
+
+        holder.itemView.setOnClickListener(v -> listener.onImageClick(imageUri));
     }
 
     @Override
     public int getItemCount() {
-        return imageList.size();
+        return imageUriList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

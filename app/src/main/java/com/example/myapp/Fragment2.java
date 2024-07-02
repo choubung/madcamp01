@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -27,7 +26,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -38,19 +36,12 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Environment;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 import static android.app.Activity.RESULT_OK;
+
 
 public class Fragment2 extends Fragment {
 
@@ -61,7 +52,7 @@ public class Fragment2 extends Fragment {
 
     private RecyclerView recyclerView;
     private ImageAdapter imageAdapter;
-    private List<Bitmap> imageList = new ArrayList<>();
+    private List<Uri> imageUriList = new ArrayList<>();
     private Button btnSelect, btnDelete;
 
 
@@ -76,11 +67,10 @@ public class Fragment2 extends Fragment {
 
         recyclerView = rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        imageAdapter = new ImageAdapter(imageList, bitmap -> {
+        imageAdapter = new ImageAdapter(imageUriList, uri -> {
             Intent intent = new Intent(getActivity(), ImageDetailActivity.class);
-            Uri imageUri = saveBitmapToFile(bitmap);
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            intent.putExtra(ImageDetailActivity.EXTRA_IMAGE_URI, imageUri.toString());
+            intent.putExtra(ImageDetailActivity.EXTRA_IMAGE_URI, uri.toString());
             startActivity(intent);
         });
         recyclerView.setAdapter(imageAdapter);
@@ -88,12 +78,11 @@ public class Fragment2 extends Fragment {
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
         fab.setOnClickListener(v -> showImageSourceDialog());
 
-        //사진 선택 삭제 버튼 주석처리
-//        btnSelect = rootView.findViewById(R.id.btnSelect);
-//        btnDelete = rootView.findViewById(R.id.btnDelete);
-//
-//        btnSelect.setOnClickListener(v -> selectImage());
-//        btnDelete.setOnClickListener(v -> deleteImage());
+        // 사진 선택 삭제 버튼 주석처리
+        // btnSelect = rootView.findViewById(R.id.btnSelect);
+        // btnDelete = rootView.findViewById(R.id.btnDelete);
+        // btnSelect.setOnClickListener(v -> selectImage());
+        // btnDelete.setOnClickListener(v -> deleteImage());
 
         loadImagesFromStorage();
         return rootView;
@@ -206,7 +195,8 @@ public class Fragment2 extends Fragment {
             if (requestCode == REQUEST_IMAGE_CAPTURE && data != null && data.getExtras() != null) {
                 Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
                 Bitmap croppedBitmap = cropToSquare(imageBitmap);
-                imageList.add(croppedBitmap);
+                Uri imageUri = saveBitmapToFile(croppedBitmap);
+                imageUriList.add(imageUri);
                 imageAdapter.notifyDataSetChanged();
             } else if (requestCode == REQUEST_IMAGE_PICK && data != null && data.getData() != null) {
                 Uri imageUri = data.getData();
@@ -215,7 +205,7 @@ public class Fragment2 extends Fragment {
                     bitmap = rotateImageIfRequired(bitmap, imageUri);
                     Bitmap croppedBitmap = cropToSquare(bitmap);
                     saveBitmapToFile(croppedBitmap);
-                    imageList.add(croppedBitmap);
+                    imageUriList.add(imageUri);
                     imageAdapter.notifyDataSetChanged();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -232,7 +222,6 @@ public class Fragment2 extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return Uri.fromFile(imageFile);
     }
 
@@ -250,8 +239,8 @@ public class Fragment2 extends Fragment {
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         Set<String> imagePaths = sharedPreferences.getStringSet(KEY_IMAGE_PATHS, new HashSet<>());
         for (String path : imagePaths) {
-            Bitmap bitmap = BitmapFactory.decodeFile(path);
-            imageList.add(bitmap);
+            Uri imageUri = Uri.parse(path);
+            imageUriList.add(imageUri);
         }
         imageAdapter.notifyDataSetChanged();
     }
