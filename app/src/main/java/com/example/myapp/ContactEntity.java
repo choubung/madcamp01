@@ -5,8 +5,8 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.ColumnInfo;
 
-@Entity(tableName = "contact")
-        //indices = {@Index(value = {"name", "phone", "email"}, unique = true)})
+@Entity(tableName = "contact",
+        indices = {@Index(value = {"name", "phone", "email"}, unique = true)})
 public class ContactEntity {
     @PrimaryKey(autoGenerate = true)
     private int idx;

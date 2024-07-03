@@ -120,14 +120,7 @@ public class Fragment1 extends Fragment {
                 addContactLauncher.launch(intent);
             }
         });
-
         return rootView;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        initContactData();
     }
 
     @Override
@@ -158,9 +151,16 @@ public class Fragment1 extends Fragment {
 
     // 데이터 초기화 및 가져오기
     private void initContactData() {
-        if (contactItems.isEmpty()) { // 데이터가 비어있을 때만 초기화
-            new GetContact(getActivity()).start();
-        }
+        new Thread(() -> {
+            int contactCount = ContactDatabase.getInstance(getActivity().getApplicationContext()).getContactDao().getContactCount();
+            if (contactCount == 0) {
+                // 데이터가 없을 때만 초기화
+                parserJsonAndInsert(getActivity().getApplicationContext());
+            } else {
+                // 데이터가 이미 있으면 refreshContactList를 호출하여 기존 데이터를 로드
+                getActivity().runOnUiThread(this::refreshContactList);
+            }
+        }).start();
     }
 
     // 삭제 확인 다이얼로그 표시
@@ -189,7 +189,7 @@ public class Fragment1 extends Fragment {
             ContactEntity contact = new ContactEntity(item.getName(), item.getDepartment(), item.getPhoneNumber(), item.getEmail());
             long newIdx = ContactDatabase.getInstance(context).getContactDao().insert(contact); // 새로 만든 entity contact를 넣기
             item.setIdx((int) newIdx); // 새로 추가된 연락처의 idx 설정
-            Log.d(TAG, "DB에 데이터추가 완료");
+            Log.d(TAG, "DB에 데이터추가 완료 : " + newIdx);
 
             // UI 갱신
             getActivity().runOnUiThread(() -> {
@@ -221,13 +221,14 @@ public class Fragment1 extends Fragment {
         @Override
         public void run() {
             Log.d(TAG, "기본 목록에 데이터 추가");
-
             // 데이터베이스의 현재 데이터 수를 확인
             int contactCount = ContactDatabase.getInstance(context).getContactDao().getContactCount();
             Log.d(TAG, "현재 데이터베이스에 저장된 연락처 수: " + contactCount);
             if (contactCount == 0) {
                 // 데이터가 없을 때만 JSON 파싱 및 삽입
                 parserJsonAndInsert(context);
+                int jsonConount = ContactDatabase.getInstance(context).getContactDao().getContactCount(); // 디버그용
+                Log.d(TAG, "첫 파싱 이후 현재 데이터베이스에 저장된 연락처 수: " + jsonConount); // 디버그용
 
                 // JSON 데이터 삽입 후 새로 갱신된 데이터를 로드
                 List<ContactEntity> updatedEntities = ContactDatabase.getInstance(context).getContactDao().getAllContact();
@@ -235,7 +236,7 @@ public class Fragment1 extends Fragment {
                 for (ContactEntity entity : updatedEntities) {
                     ContactItem item = new ContactItem(entity.getIdx(), entity.getName(), entity.getDepartment(), entity.getPhone(), entity.getEmail());
                     contactItems.add(item);
-                    Log.d(TAG, "횟수: " + i + ", 데이터베이스에서 가져온 연락처: " + item.toString());
+                    Log.d(TAG, "Json 횟수: " + i + ", 데이터베이스에서 가져온 연락처: " + item.toString());
                     i++;
                 }
                 getActivity().runOnUiThread(() -> {
@@ -245,10 +246,12 @@ public class Fragment1 extends Fragment {
                 // 데이터가 이미 있을 경우 기존 데이터 로드
                 List<ContactEntity> entities = ContactDatabase.getInstance(context).getContactDao().getAllContact();
                 int i = 0;
+                contactItems.clear();
+                Log.d(TAG, "데이터 이미 존재 if로 들어옴");
                 for (ContactEntity entity : entities) {
                     ContactItem item = new ContactItem(entity.getIdx(), entity.getName(), entity.getDepartment(), entity.getPhone(), entity.getEmail());
                     contactItems.add(item);
-                    Log.d(TAG, "횟수: " + i + ", 데이터베이스에서 가져온 연락처: " + item.toString());
+                    Log.d(TAG, "데이터 이미 존재 횟수: " + i + ", 데이터베이스에서 가져온 연락처: " + item.toString());
                     i++;
                 }
                 getActivity().runOnUiThread(() -> {
