@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +85,32 @@ public class Fragment2 extends Fragment {
         fab.setOnClickListener(v -> showImageSourceDialog());
 
         loadImagesFromStorage();
+
+        // SharedPreferences에 저장된 모든 사진 데이터의 Uri를 로그로 출력
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        Set<String> imagePaths = sharedPreferences.getStringSet(KEY_IMAGE_PATHS, new HashSet<>());
+        for (String path : imagePaths) {
+            Log.d("onCreateView - 데이터 확인", "Stored image path: " + path);
+        }
+
         return rootView;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        saveImagePathsToSharedPreferences();
+    }
+
+    private void saveImagePathsToSharedPreferences() {
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Set<String> imagePaths = new HashSet<>();
+        for (Uri uri : imageUriList) {
+            imagePaths.add(uri.toString());
+        }
+        editor.putStringSet(KEY_IMAGE_PATHS, imagePaths);
+        editor.apply();
     }
 
     private void showImageSourceDialog() {
@@ -175,41 +201,10 @@ public class Fragment2 extends Fragment {
         }
     }
 
-    private Bitmap rotateImageIfRequired(Bitmap img, Uri selectedImage) throws IOException {
-        InputStream input = requireContext().getContentResolver().openInputStream(selectedImage);
-        ExifInterface ei;
-        if (Build.VERSION.SDK_INT > 23) {
-            ei = new ExifInterface(input);
-        } else {
-            ei = new ExifInterface(selectedImage.getPath());
-        }
-        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-
-        switch (orientation) {
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                return rotateImage(img, 90);
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                return rotateImage(img, 180);
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                return rotateImage(img, 270);
-            default:
-                return img;
-        }
-    }
-
     private Bitmap rotateImage(Bitmap img, int degree) {
         Matrix matrix = new Matrix();
         matrix.postRotate(degree);
         return Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
-    }
-
-    private Bitmap cropToSquare(Bitmap bitmap) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        int newSize = Math.min(width, height);
-        int xOffset = (width - newSize) / 2;
-        int yOffset = (height - newSize) / 2;
-        return Bitmap.createBitmap(bitmap, xOffset, yOffset, newSize, newSize);
     }
 
     @Override
@@ -217,47 +212,63 @@ public class Fragment2 extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_IMAGE_CAPTURE) {
-                File imageFile = new File(currentPhotoPath);
-                Uri imageUri = Uri.fromFile(imageFile);
-                imageUriList.add(imageUri);
-                imageAdapter.notifyDataSetChanged();
-                saveImagePath(imageUri.toString());
+                // 이미지 파일을 저장한 후, 리스트에 추가하고 어댑터에 알림
+                if (currentPhotoPath != null) {
+                    File imageFile = new File(currentPhotoPath);
+                    Uri imageUri = Uri.fromFile(imageFile);
+                    if (!imageUriList.contains(imageUri)) { // 중복 저장 방지
+                        imageUriList.add(imageUri);
+                        imageAdapter.notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(requireContext(), "이미 추가된 사진입니다.", Toast.LENGTH_SHORT).show();
+                    }
+                    // 이미지 URI를 SharedPreferences에 저장
+                    saveImagePath(imageUri);
+                } else {
+                    Toast.makeText(requireContext(), "사진을 가져오는 데 문제가 발생했습니다.", Toast.LENGTH_SHORT).show();
+                }
             } else if (requestCode == REQUEST_IMAGE_PICK && data != null && data.getData() != null) {
                 Uri imageUri = data.getData();
-                imageUriList.add(imageUri);
-                imageAdapter.notifyDataSetChanged();
-                saveImagePath(imageUri.toString());
+                if (!imageUriList.contains(imageUri)) { // 중복 저장 방지
+                    imageUriList.add(imageUri);
+                    imageAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(requireContext(), "이미 추가된 사진입니다.", Toast.LENGTH_SHORT).show();
+                }
+
+                saveImagePath(imageUri);
             }
         }
     }
 
-    private Uri saveBitmapToFile(Bitmap bitmap) {
-        File filesDir = requireContext().getFilesDir();
-        File imageFile = new File(filesDir, System.currentTimeMillis() + ".png");
-        try (FileOutputStream fos = new FileOutputStream(imageFile)) {
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return Uri.fromFile(imageFile);
-    }
-
-    private void saveImagePath(String path) {
+    private void saveImagePath(Uri uri) {
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Set<String> imagePaths = sharedPreferences.getStringSet(KEY_IMAGE_PATHS, new HashSet<>());
-        imagePaths.add(path);
+        imagePaths.add(uri.toString()); // 변경 전: uri.toString() -> 변경 후: uri
         editor.putStringSet(KEY_IMAGE_PATHS, imagePaths);
         editor.apply();
+
+        // Log로 저장된 이미지 경로 확인
+        Log.d("Fragment2", "Saved image path: " + uri.toString());
     }
 
     private void loadImagesFromStorage() {
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         Set<String> imagePaths = sharedPreferences.getStringSet(KEY_IMAGE_PATHS, new HashSet<>());
+
+        // 이미지 URI 리스트를 초기화하지 않고 기존 데이터를 유지하도록 수정
         for (String path : imagePaths) {
-            Uri imageUri = Uri.parse(path);
-            imageUriList.add(imageUri);
+            Uri imageUri = Uri.parse(path); // string을 uri로 변환
+            if (!imageUriList.contains(imageUri)) { // 이미 리스트에 포함되지 않은 경우만 가져옴
+                imageUriList.add(imageUri);
+            }
+
+            // Log로 불러온 이미지 경로 확인
+            Log.d("Fragment2", "Loaded image path: " + imageUri.toString());
         }
+
+        // 기존 데이터를 유지하면서 새로운 데이터도 추가할 수 있도록 notifyDataSetChanged() 호출 위치를 수정
         imageAdapter.notifyDataSetChanged();
     }
 }
