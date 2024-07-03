@@ -59,7 +59,7 @@
 
 - 상세정보창
     - 전화/메시지/메일 버튼을 누르면 해당 앱으로 연결됩니다.
-<img width="30%" src="https://github.com/choubung/madcamp01/assets/112858914/9fec9218-25a0-4b18-a2ae-fc9e7baa46d5"/>
+<img width="30%" src="https://github.com/choubung/madcamp01/assets/112858914/0a6d3658-ddf0-48f7-93e8-9663a118dd31"/>
 <br/>
 <br/>
 
@@ -69,7 +69,7 @@
 - “사진 가져오기” 선택 시, 갤러리의 사진을 `RecyclerView` 에 나타냅니다.
 - “사진 촬영하기” 선택 시, 카메라를 통해 사진을 촬영하고, 이미지를 `RecyclerView`에 나타냅니다.
 - 각 사진 클릭 시, 원본 사진을 볼 수 있습니다.
-<img width="30%" src="https://github.com/choubung/madcamp01/assets/112858914/e4eef713-5323-4d37-a416-62f433b7c01d"/>
+<img width="30%" src="https://github.com/choubung/madcamp01/assets/112858914/c40259b2-521c-437b-b76e-b4c757387a15"/>
 <br/>
 <br/>
 
@@ -78,7 +78,7 @@
 - “받는 이”에 이름을 입력하면 연락처DB에서 메일 주소를 가져옵니다.
 - 본인의 상황에 맞게 메일 내용을 수정할 수 있습니다.
 - 하단의 `Floating Action Button` 을 누르면 메일앱으로 작성 내용이 연동됩니다.
-<img width="30%" src="https://github.com/choubung/madcamp01/assets/112858914/9ce68e95-d82a-432d-96a3-5d9ed25a72d9"/>
+<img width="30%" src="https://github.com/choubung/madcamp01/assets/112858914/36744ea3-035e-4fa2-8518-4bb60c62f422"/>
 <br/>
 <br/>
 <br/>
