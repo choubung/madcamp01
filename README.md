@@ -80,5 +80,5 @@
 <br/>
 
 ## Beta
-**apk link**
-https://drive.google.com/file/d/1UsMPxY_hzX5fc8G_PQuLNIYMw5xWwjEm/view?usp=drive_link
+**apk link**<br/>
+https://drive.google.com/file/d/1_KWqvd4Z5wV9mBZXbxZrktVsm2dOXr-O/view?usp=drive_link
