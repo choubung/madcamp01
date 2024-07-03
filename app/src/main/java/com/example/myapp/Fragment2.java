@@ -221,18 +221,12 @@ public class Fragment2 extends Fragment {
                 Uri imageUri = Uri.fromFile(imageFile);
                 imageUriList.add(imageUri);
                 imageAdapter.notifyDataSetChanged();
+                saveImagePath(imageUri.toString());
             } else if (requestCode == REQUEST_IMAGE_PICK && data != null && data.getData() != null) {
                 Uri imageUri = data.getData();
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), imageUri);
-                    bitmap = rotateImageIfRequired(bitmap, imageUri);
-                    Bitmap croppedBitmap = cropToSquare(bitmap);
-                    saveBitmapToFile(croppedBitmap);
-                    imageUriList.add(imageUri);
-                    imageAdapter.notifyDataSetChanged();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                imageUriList.add(imageUri);
+                imageAdapter.notifyDataSetChanged();
+                saveImagePath(imageUri.toString());
             }
         }
     }
