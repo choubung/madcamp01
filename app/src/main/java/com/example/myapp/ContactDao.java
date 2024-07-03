@@ -5,7 +5,6 @@ import androidx.room.Query;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Update;
-import androidx.room.Delete;
 import java.util.List;
 
 @Dao
@@ -21,4 +20,8 @@ public interface ContactDao {
 
     @Update
     void update(ContactEntity contact);
+
+    // 데이터가 존재하는지 확인하는 메서드
+    @Query("SELECT COUNT(*) FROM contact")
+    int getContactCount();
 }

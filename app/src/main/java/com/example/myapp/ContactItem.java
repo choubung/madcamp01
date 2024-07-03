@@ -2,6 +2,8 @@ package com.example.myapp;
 
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
 public class ContactItem implements Serializable { // 다른 개체로 넘기기 위해 Serializable implement
@@ -78,5 +80,17 @@ public class ContactItem implements Serializable { // 다른 개체로 넘기기
 
     public void setProfile(ImageView profile) {
         this.profile = profile;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "ContactItem{" +
+                "idx=" + idx +
+                ", name='" + name + '\'' +
+                ", department='" + department + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
